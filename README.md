@@ -1,39 +1,17 @@
-# Laboratory of Applied Robotics Student Interface
-Package used by student to complete the assignment of the course.
+# ROBOT EVACUATION PLANNING
 
-## Setup
+part of final project delivery.
 
-```bash
-$ cd workspace/project
-$ git pull https://github.com/ymarkova/theEITgroup.git
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-$ source ../environment.sh
-```
+<img src="pathplan1.png" alt="drawing" width="500"/>
 
-## Usage
+the project consists of evacuating three robots from a room in which a number of obstacles are present. The robots initial positions, the location of the gate, and the number/ location of obstacles are random. The robots need to evacuate the room as fast as possible without colliding with any walls, obstacles or with each other.
 
-```bash
-$ cd workspace/simulator
-$ AR_simulator_gui # AR_simulator
-$ AR_pipeline
-# Select the 4 black corners counter-clockwise starting from the one near the red line
-# Then stop (ctrl + C)
-$ AR_pipeline
-$ AR_rviz
-$ AR_run
-```
+The solution is based on constructing a roadmap using the vertical cell decomposition algorithm. The path for each robot is then found by using breadth first search and later optimized to remove any redundant movements.
 
-## Other usage
+Once we find all paths for the robots, we apply an optimization step to further reduce any redundant movements. The optimization is done by looking ahead to the future. Each point on the path is allowed to look at the upcoming points (up to a defined limit). it compares the distances between itself and each point that is on the horizon. The smallest distance will decide which point we will jump to next [given that no collision has been detected]. The function uses a tunable cost discount that could encourage going for further away points [in the index] even though they are not the least distance. The look ahead that decides the horizon is a variable that is controlled by the algorithm. It starts greedily with the full horizon, then later restricts it to allow for an increase in the distance of the path. As shown in the figure below, that increase in the length is done when a collision has been detected on that path to maybe allow for more time for the other robot to clear the collision point.
 
-```bash
-# Modify the environment
-$ gedit $AR_map_file
+<img src="collision_a.png" alt="drawing" width="500"/>
 
-# Disable demo implementation
-$ cd $AR_config_dir
-$ gedit default_implementation.config
-# Then set flag to <False> in order to implement our own solution
-```
+
+
+[LINK TO SIMULATION VIDEO](https://www.youtube.com/watch?v=G5HU3dn15KI)
